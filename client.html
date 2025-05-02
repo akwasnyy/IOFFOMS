@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastFood - Klient</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">FastFood</a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h2 class="mb-4">Menu</h2>
+    <div class="row" id="menu-list">
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Burger Classic</h5>
+                    <p class="card-text">Cena: 15 zł</p>
+                    <button class="btn btn-primary">Dodaj do zamówienia</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Frytki</h5>
+                    <p class="card-text">Cena: 6 zł</p>
+                    <button class="btn btn-primary">Dodaj do zamówienia</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Napój Cola</h5>
+                    <p class="card-text">Cena: 5 zł</p>
+                    <button class="btn btn-primary">Dodaj do zamówienia</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mt-5">Twoje zamówienie</h3>
+    <ul class="list-group mb-3">
+        <li class="list-group-item">Burger Classic x1</li>
+        <li class="list-group-item">Frytki x1</li>
+    </ul>
+    <button class="btn btn-success">Złóż zamówienie</button>
+
+    <h4 class="mt-4">Status zamówienia</h4>
+    <div class="alert alert-info" role="alert">
+        Status: W trakcie realizacji
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
