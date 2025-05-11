@@ -1,0 +1,20 @@
+@startuml
+actor Klient
+actor "Pracownik kuchni" as Kuchnia
+actor Administrator
+
+rectangle "System FastFood" {
+  
+  Klient --> (Przeglądaj menu)
+  Klient --> (Składaj zamówienie)
+  Klient --> (Wybierz metodę płatności)
+  Klient --> (Śledź status zamówienia)
+  
+  Kuchnia --> (Wyświetl zamówienia)
+  Kuchnia --> (Zmień status zamówienia)
+  
+  Administrator --> (Zarządzaj menu)
+  Administrator --> (Przeglądaj statystyki zamówień)
+}
+
+@enduml
