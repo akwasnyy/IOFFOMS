@@ -1,0 +1,42 @@
+@startuml
+|Klient|
+start
+:Przeglądaj menu;
+repeat
+    :Kliknij "Dodaj do zamówienia";
+repeat while (Dodajesz więcej produktów?)
+:Kliknij "Złóż zamówienie";
+:Zapisz zamówienie;
+:Wyświetl status: "W trakcie realizacji";
+
+|Pracownik Kuchni|
+:Zobacz nowe zamówienie;
+:Kliknij "Rozpocznij przygotowanie";
+:Przygotuj zamówienie;
+:Kliknij "Gotowe do odbioru";
+:Zmień status na "Gotowe";
+
+|Klient|
+:Odbierz zamówienie;
+:Status: "Gotowe do odbioru";
+
+|Administrator|
+:Wejdź w panel "Zarządzanie Menu";
+if (Dodajesz nowy produkt?) then (Tak)
+  :Wypełnij formularz;
+  :Kliknij "Zapisz Produkt";
+  :Produkt dodany do menu;
+else
+  if (Edycja?) then (Tak)
+    :Kliknij "Edytuj";
+    :Zaktualizuj dane produktu;
+    :Zapisz zmiany;
+  else
+    :Kliknij "Usuń";
+    :Usuń produkt z listy;
+  endif
+endif
+
+|Klient|
+stop
+@enduml
