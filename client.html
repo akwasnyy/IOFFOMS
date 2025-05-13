@@ -16,42 +16,11 @@
 
 <div class="container mt-4">
     <h2 class="mb-4">Menu</h2>
-    <div class="row" id="menu-list">
-        <div class="col-md-4">
-            <div class="card mb-4 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Burger Classic</h5>
-                    <p class="card-text">Cena: 15 zł</p>
-                    <button class="btn btn-primary">Dodaj do zamówienia</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card mb-4 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Frytki</h5>
-                    <p class="card-text">Cena: 6 zł</p>
-                    <button class="btn btn-primary">Dodaj do zamówienia</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card mb-4 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Napój Cola</h5>
-                    <p class="card-text">Cena: 5 zł</p>
-                    <button class="btn btn-primary">Dodaj do zamówienia</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="row" id="menu-list"></div>
 
     <h3 class="mt-5">Twoje zamówienie</h3>
-    <ul class="list-group mb-3">
-        <li class="list-group-item">Burger Classic x1</li>
-        <li class="list-group-item">Frytki x1</li>
-    </ul>
-    <button class="btn btn-success">Złóż zamówienie</button>
+    <ul class="list-group mb-3"></ul>
+    <button class="btn btn-success" onclick="submitOrder()">Złóż zamówienie</button>
 
     <h4 class="mt-4">Status zamówienia</h4>
     <div class="alert alert-info" role="alert">
@@ -60,6 +29,91 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script>
+const { createClient } = supabase;
+const supabaseClient = createClient(
+  'https://frsqziglzitmjsfwyxat.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZyc3F6aWdseml0bWpzZnd5eGF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxNDQ1NTYsImV4cCI6MjA2MjcyMDU1Nn0.H02LnkZvxAevO47k8FLWNu_LI_XgOI6ZomfpHjCPcQU' 
+);
+
+const cart = [];
+
+async function loadMenu() {
+  const { data, error } = await supabaseClient.from('products').select('*').eq('is_available', true);
+  if (error) {
+    console.error('Error fetching products:', error);
+    return;
+  }
+
+  const menuList = document.getElementById('menu-list');
+  menuList.innerHTML = data.map(product => `
+    <div class="col-md-4">
+      <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">${product.name}</h5>
+          <p class="card-text">Cena: ${product.price} zł</p>
+          <button class="btn btn-primary" onclick='addToCart(${JSON.stringify(product)})'>Dodaj do zamówienia</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addToCart(product) {
+  cart.push({ product_id: product.product_id, quantity: 1, price: product.price });
+  updateCartDisplay();
+}
+
+function updateCartDisplay() {
+  const list = document.querySelector('.list-group');
+  list.innerHTML = cart.map(item => `
+    <li class="list-group-item">Produkt ID ${item.product_id} x${item.quantity}</li>
+  `).join('');
+}
+
+async function submitOrder() {
+  const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+  const { data, error } = await supabaseClient
+    .from('orders')
+    .insert([{
+      user_id: null,
+      order_status: 'received',
+      order_type: 'dine_in',
+      table_number: '1',
+      total_amount: totalAmount,
+      payment_status: 'pending',
+      payment_method: 'cash',
+      customer_notes: ''
+    }])
+    .select();
+
+  if (error || !data || !data[0]) {
+    console.error('Order creation error:', error);
+    return;
+  }
+
+  const orderId = data[0].order_id;
+
+  for (const item of cart) {
+    await supabaseClient.from('orderitems').insert([
+      {
+        order_id: orderId,
+        product_id: item.product_id,
+        quantity: item.quantity,
+        price_at_order: item.price,
+        subtotal: item.price * item.quantity
+      }
+    ]);
+  }
+
+  alert(`Zamówienie złożone! ID: ${orderId}`);
+  cart.length = 0;
+  updateCartDisplay();
+}
+
+loadMenu();
+</script>
 </body>
 </html>
-

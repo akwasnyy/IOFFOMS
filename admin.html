@@ -5,11 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FastFood - Panel Administracyjny</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .table th {
-            background-color: #f8f9fa;
-        }
-    </style>
 </head>
 <body class="bg-light">
 
@@ -20,114 +15,119 @@
 </nav>
 
 <div class="container mt-4">
-    <ul class="nav nav-tabs mb-3" id="adminTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="manage-menu-tab" data-bs-toggle="tab" data-bs-target="#manage-menu" type="button" role="tab" aria-controls="manage-menu" aria-selected="true">Zarządzanie Menu</button>
-        </li>
-    </ul>
-
-    <div class="tab-content" id="adminTabsContent">
-        <div class="tab-pane fade show active" id="manage-menu" role="tabpanel" aria-labelledby="manage-menu-tab">
-            <div class="row">
-                <div class="col-md-8">
-                    <h3>Aktualne Pozycje Menu</h3>
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#ID</th>
-                                    <th scope="col">Nazwa Produktu</th>
-                                    <th scope="col">Cena (zł)</th>
-                                    <th scope="col">Kategoria (TODO)</th>
-                                    <th scope="col">Akcje</th>
-                                </tr>
-                            </thead>
-                            <tbody id="menu-items-table">
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Burger Classic</td>
-                                    <td>15.00</td>
-                                    <td>Burgery</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-warning">Edytuj</button>
-                                        <button class="btn btn-sm btn-danger">Usuń</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Frytki</td>
-                                    <td>6.00</td>
-                                    <td>Dodatki</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-warning">Edytuj</button>
-                                        <button class="btn btn-sm btn-danger">Usuń</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Napój Cola</td>
-                                    <td>5.00</td>
-                                    <td>Napoje</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-warning">Edytuj</button>
-                                        <button class="btn btn-sm btn-danger">Usuń</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">4</th>
-                                    <td>Sałatka Vege</td>
-                                    <td>12.50</td>
-                                    <td>Sałatki</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-warning">Edytuj</button>
-                                        <button class="btn btn-sm btn-danger">Usuń</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <h3>Dodaj / Edytuj Produkt</h3>
-                    <form id="product-form">
-                        <input type="hidden" id="productId">
-                        <div class="mb-3">
-                            <label for="productName" class="form-label">Nazwa produktu</label>
-                            <input type="text" class="form-control" id="productName" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="productPrice" class="form-label">Cena (zł)</label>
-                            <input type="number" class="form-control" id="productPrice" step="0.01" min="0" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="productCategory" class="form-label">Kategoria (TODO)</label>
-                            <select class="form-select" id="productCategory">
-                                <option selected disabled value="">Wybierz kategorię...</option>
-                                <option value="burgery">Burgery</option>
-                                <option value="dodatki">Dodatki</option>
-                                <option value="napoje">Napoje</option>
-                                <option value="salatki">Sałatki</option>
-                                <option value="desery">Desery</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="productDescription" class="form-label">Opis (opcjonalnie)</label>
-                            <textarea class="form-control" id="productDescription" rows="3"></textarea>
-                        </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Zapisz Produkt</button>
-                            <button type="button" class="btn btn-secondary mt-2" id="clear-form-btn" style="display:none;">Anuluj Edycję</button>
-                        </div>
-                    </form>
-                </div>
+    <div class="row">
+        <div class="col-md-8">
+            <h3>Aktualne Pozycje Menu</h3>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>#ID</th>
+                            <th>Nazwa</th>
+                            <th>Cena (zł)</th>
+                            <th>Dostępny</th>
+                            <th>Akcje</th>
+                        </tr>
+                    </thead>
+                    <tbody id="product-table-body"></tbody>
+                </table>
             </div>
+        </div>
+        <div class="col-md-4">
+            <h3>Dodaj / Edytuj Produkt</h3>
+            <form id="product-form">
+                <input type="hidden" id="productId">
+                <div class="mb-3">
+                    <label for="productName" class="form-label">Nazwa produktu</label>
+                    <input type="text" class="form-control" id="productName" required>
+                </div>
+                <div class="mb-3">
+                    <label for="productPrice" class="form-label">Cena (zł)</label>
+                    <input type="number" class="form-control" id="productPrice" step="0.01" min="0" required>
+                </div>
+                <div class="mb-3">
+                    <label for="productAvailable" class="form-label">Dostępny</label>
+                    <select class="form-select" id="productAvailable">
+                        <option value="true">Tak</option>
+                        <option value="false">Nie</option>
+                    </select>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Zapisz</button>
+                    <button type="button" class="btn btn-secondary mt-2" onclick="clearForm()">Wyczyść</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script>
+const { createClient } = supabase;
+const supabaseClient = createClient(
+  'https://frsqziglzitmjsfwyxat.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZyc3F6aWdseml0bWpzZnd5eGF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxNDQ1NTYsImV4cCI6MjA2MjcyMDU1Nn0.H02LnkZvxAevO47k8FLWNu_LI_XgOI6ZomfpHjCPcQU' 
+);
 
+async function loadProducts() {
+  const { data, error } = await supabaseClient.from('products').select('*');
+  const body = document.getElementById('product-table-body');
+  body.innerHTML = '';
+  if (data) {
+    for (const product of data) {
+      body.innerHTML += `
+        <tr>
+          <td>${product.product_id}</td>
+          <td>${product.name}</td>
+          <td>${product.price}</td>
+          <td>${product.is_available ? 'Tak' : 'Nie'}</td>
+          <td>
+            <button class="btn btn-sm btn-warning" onclick='editProduct(${JSON.stringify(product)})'>Edytuj</button>
+            <button class="btn btn-sm btn-danger" onclick='deleteProduct(${product.product_id})'>Usuń</button>
+          </td>
+        </tr>`;
+    }
+  } else {
+    console.error(error);
+  }
+}
+
+function editProduct(product) {
+  document.getElementById('productId').value = product.product_id;
+  document.getElementById('productName').value = product.name;
+  document.getElementById('productPrice').value = product.price;
+  document.getElementById('productAvailable').value = product.is_available;
+}
+
+function clearForm() {
+  document.getElementById('product-form').reset();
+  document.getElementById('productId').value = '';
+}
+
+document.getElementById('product-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = document.getElementById('productId').value;
+  const name = document.getElementById('productName').value;
+  const price = parseFloat(document.getElementById('productPrice').value);
+  const available = document.getElementById('productAvailable').value === 'true';
+
+  if (id) {
+    await supabaseClient.from('products').update({ name, price, is_available: available }).eq('product_id', id);
+  } else {
+    await supabaseClient.from('products').insert([{ name, price, is_available: available }]);
+  }
+
+  clearForm();
+  loadProducts();
+});
+
+async function deleteProduct(id) {
+  await supabaseClient.from('products').delete().eq('product_id', id);
+  loadProducts();
+}
+
+loadProducts();
+</script>
 </body>
 </html>
