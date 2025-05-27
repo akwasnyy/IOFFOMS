@@ -46,18 +46,19 @@ async function loadMenu() {
     return;
   }
 
-  const menuList = document.getElementById('menu-list');
-  menuList.innerHTML = data.map(product => `
-    <div class="col-md-4">
-      <div class="card mb-4 shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title">${product.name}</h5>
-          <p class="card-text">Cena: ${product.price} zł</p>
-          <button class="btn btn-primary" onclick='addToCart(${JSON.stringify(product)})'>Dodaj do zamówienia</button>
-        </div>
+ const menuList = document.getElementById('menu-list');
+menuList.innerHTML = data.map(product => `
+  <div class="col-md-4">
+    <div class="card mb-4 shadow-sm">
+      <img src="${product.image_url || 'https://via.placeholder.com/400x300?text=Brak+zdjęcia'}" class="card-img-top" alt="${product.name}">
+      <div class="card-body">
+        <h5 class="card-title">${product.name}</h5>
+        <p class="card-text">Cena: ${product.price} zł</p>
+        <button class="btn btn-primary" onclick='addToCart(${JSON.stringify(product)})'>Dodaj do zamówienia</button>
       </div>
     </div>
-  `).join('');
+  </div>
+`).join('');
 }
 
 function addToCart(product) {

@@ -52,10 +52,16 @@
                         <option value="false">Nie</option>
                     </select>
                 </div>
+                <div class="mb-3">
+  <label for="productImage" class="form-label">Zdjęcie produktu</label>
+  <input type="file" class="form-control" id="productImage" accept="image/*">
+</div>
+
                 <div class="d-grid">
                     <button type="submit" class="btn btn-primary">Zapisz</button>
                     <button type="button" class="btn btn-secondary mt-2" onclick="clearForm()">Wyczyść</button>
                 </div>
+                
             </form>
         </div>
     </div>
@@ -107,15 +113,36 @@ function clearForm() {
 
 document.getElementById('product-form').addEventListener('submit', async (e) => {
   e.preventDefault();
+
   const id = document.getElementById('productId').value;
   const name = document.getElementById('productName').value;
   const price = parseFloat(document.getElementById('productPrice').value);
   const available = document.getElementById('productAvailable').value === 'true';
 
+  const imageFile = document.getElementById('productImage').files[0];
+  let imageUrl = null;
+
+  if (imageFile) {
+    const filePath = `products/${Date.now()}_${imageFile.name}`;
+    const { error: uploadError } = await supabaseClient.storage.from('images').upload(filePath, imageFile);
+
+    if (uploadError) {
+      console.error('Upload error:', uploadError);
+      alert('Błąd podczas przesyłania zdjęcia.');
+      return;
+    }
+
+    const { data: publicUrlData } = supabaseClient.storage.from('images').getPublicUrl(filePath);
+    imageUrl = publicUrlData.publicUrl;
+  }
+
+  const productData = { name, price, is_available: available };
+  if (imageUrl) productData.image_url = imageUrl;
+
   if (id) {
-    await supabaseClient.from('products').update({ name, price, is_available: available }).eq('product_id', id);
+    await supabaseClient.from('products').update(productData).eq('product_id', id);
   } else {
-    await supabaseClient.from('products').insert([{ name, price, is_available: available }]);
+    await supabaseClient.from('products').insert([productData]);
   }
 
   clearForm();
