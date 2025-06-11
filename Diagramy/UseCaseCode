@@ -1,20 +1,21 @@
 @startuml
+left to right direction
+
 actor Klient
 actor "Pracownik kuchni" as Kuchnia
 actor Administrator
 
 rectangle "System FastFood" {
-  
-  Klient --> (Przeglądaj menu)
-  Klient --> (Składaj zamówienie)
-  Klient --> (Wybierz metodę płatności)
-  Klient --> (Śledź status zamówienia)
-  
-  Kuchnia --> (Wyświetl zamówienia)
-  Kuchnia --> (Zmień status zamówienia)
-  
-  Administrator --> (Zarządzaj menu)
-  Administrator --> (Przeglądaj statystyki zamówień)
-}
 
+  Klient -down-> (Przeglądaj menu)
+  Klient -down-> (Składaj zamówienie)
+  Klient -down-> (Wybierz metodę płatności)
+  Klient -down-> (Śledź status zamówienia)
+
+  Kuchnia -down-> (Wyświetl zamówienia)
+  Kuchnia -down-> (Zmień status zamówienia)
+
+  Administrator -down-> (Zarządzaj menu)
+  Administrator -down-> (Przeglądaj statystyki zamówień)
+}
 @enduml
