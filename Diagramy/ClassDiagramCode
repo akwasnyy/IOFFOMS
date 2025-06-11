@@ -1,50 +1,84 @@
 @startuml
+class User {
+    +user_id: int
+    +username: string
+    +password_hash: string
+    +first_name: string
+    +last_name: string
+    +email: string
+    +role: string
+    +created_at: timestamp
+    +last_login_at: timestamp
 
-class Klient {
-    - id: int
-    - imie: string
-    - email: string
-    - nr_tel: string
+    +login(): boolean
+    +logout(): void
+    +hasRole(role: string): boolean
+    +changePassword(newHash: string): void
 }
 
-class Zamowienie {
-    - id: int
-    - status: string
-    - data: datetime
-    - metodaPlatnosci: string
-    + obliczCene(): float
+class Order {
+    +order_id: int
+    +user_id: int
+    +order_status: string
+    +order_type: string
+    +table_number: string
+    +total_amount: numeric
+    +payment_status: string
+    +payment_method: string
+    +customer_notes: text
+    +kitchen_notes: text
+    +created_at: timestamp
+    +updated_at: timestamp
+
+    +calculateTotal(): numeric
+    +submit(): void
+    +updateStatus(newStatus: string): void
+    +getItems(): List<OrderItem>
 }
 
-class PozycjaZamowienia {
-    - ilosc: int
-    + obliczCene(): float
+class OrderItem {
+    +order_item_id: int
+    +order_id: int
+    +product_id: int
+    +quantity: int
+    +price_at_order: numeric
+    +subtotal: numeric
+
+    +calculateSubtotal(): numeric
 }
 
-class Produkt {
-    - id: int
-    - nazwa: string
-    - cena: float
-    - opis: string
+class Product {
+    +product_id: int
+    +name: string
+    +description: text
+    +price: numeric
+    +category_id: int
+    +image_url: string
+    +is_available: bool
+    +created_at: timestamp
+    +updated_at: timestamp
+
+    +create(): void
+    +update(): void
+    +delete(): void
+    +uploadImage(file): string
+    +changeAvailability(status: bool): void
 }
 
-class Administrator {
-    - id: int
-    - login: string
-    + zarzadzajMenu()
-    + przegladajStatystyki()
+class Category {
+    +category_id: int
+    +name: string
+    +description: text
+    +created_at: timestamp
+    +updated_at: timestamp
+
+    +rename(newName: string): void
+    +updateDescription(newText: string): void
 }
 
-class PracownikKuchni {
-    - id: int
-    - imie: string
-    + przetworzZamowienie()
-}
-
-Klient "1" --> "0..*" Zamowienie
-Zamowienie "1" --> "1..*" PozycjaZamowienia
-PozycjaZamowienia "1" --> "1" Produkt
-
-Administrator --> Produkt : zarządza
-PracownikKuchni --> Zamowienie : przetwarza
-
+' RELACJE
+User "1" -- "0..*" Order : składa >
+Order "1" *-- "1..*" OrderItem : zawiera >
+OrderItem --> Product : odnosi się do >
+Product o-- Category : należy do >
 @enduml
