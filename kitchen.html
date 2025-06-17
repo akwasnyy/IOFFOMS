@@ -38,10 +38,15 @@ const supabaseClient = createClient(
 
 async function loadOrders() {
   const { data: orders, error } = await supabaseClient
-    .from('orders')
-    .select('*')
-    .in('order_status', ['received', 'in_preparation'])
-    .order('created_at', { ascending: true });
+  .from('orders')
+  .select('*')
+  .in('order_status', ['received', 'in_preparation']);
+  orders.sort((a, b) => {
+  const statusOrder = { in_preparation: 0, received: 1 };
+  const statusDiff = statusOrder[a.order_status] - statusOrder[b.order_status];
+  if (statusDiff !== 0) return statusDiff;
+  return new Date(a.created_at) - new Date(b.created_at);
+});
 
   if (error) {
     console.error('Error loading orders:', error);
@@ -63,6 +68,13 @@ async function loadOrders() {
     const statusBadge = order.order_status === 'received'
       ? '<span class="badge bg-info">Oczekujące</span>'
       : '<span class="badge bg-warning text-dark">W przygotowaniu</span>';
+    let estimatedReadyTime;
+if (order.order_status === 'received') {
+  estimatedReadyTime = new Date(new Date(order.created_at).getTime() + 20 * 60 * 1000);
+} else if (order.order_status === 'in_preparation') {
+  estimatedReadyTime = new Date(new Date(order.created_at).getTime() + 10 * 60 * 1000);
+}
+const formattedTime = estimatedReadyTime ? estimatedReadyTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '–';
 
     list.innerHTML += `
       <div class="col-lg-4 col-md-6 mb-4">
@@ -75,7 +87,10 @@ async function loadOrders() {
             <ul class="list-group list-group-flush mb-3">
               ${itemList}
             </ul>
-            <p class="card-text"><strong>Status:</strong> ${statusBadge}</p>
+            <p class="card-text">
+  <strong>Status:</strong> ${statusBadge}<br>
+  <strong>Szacowany czas realizacji:</strong> ${formattedTime}
+</p>
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
               <button class="btn btn-primary btn-sm" onclick="updateStatus(${order.order_id}, 'in_preparation')">Rozpocznij przygotowanie</button>
               <button class="btn btn-success btn-sm" onclick="updateStatus(${order.order_id}, 'ready_for_pickup')">Gotowe do odbioru</button>
