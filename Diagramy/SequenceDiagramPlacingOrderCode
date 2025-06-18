@@ -1,0 +1,15 @@
+@startuml
+actor Klient
+boundary "Aplikacja (UI)" as UI
+control "Serwer" as Server
+entity "Kuchnia" as Kitchen
+entity "System Powiadomień" as Notification
+
+Klient -> UI : wybierz pozycje z menu
+UI -> Server : złóżZamówienie(zamówienie)
+Server -> Kitchen : przekażDoKuchni(zamówienie)
+Kitchen --> Server : potwierdzeniePrzyjęcia()
+
+Server -> Notification : wyślijPowiadomienie("Zamówienie przyjęte")
+Notification -> Klient : pokaż powiadomienie
+@enduml
