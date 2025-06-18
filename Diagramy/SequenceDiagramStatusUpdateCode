@@ -1,0 +1,11 @@
+@startuml
+entity "Kuchnia" as Kitchen
+control "Serwer" as Server
+boundary "Aplikacja Klienta (UI)" as ClientApp
+
+Kitchen -> Server : zaktualizujStatus(zamówienieID, nowyStatus)
+Server -> ClientApp : aktualizujWidokStatusu(zamówienieID, nowyStatus)
+ClientApp --> Server : potwierdzenieOdebrania()
+
+@enduml
+
