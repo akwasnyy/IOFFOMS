@@ -1,0 +1,14 @@
+@startuml
+[*] --> received : zamówienie złożone
+
+received --> in_preparation : rozpoczęcie przygotowania
+in_preparation --> ready_for_pickup : przygotowanie zakończone
+ready_for_pickup --> completed : klient odebrał zamówienie
+
+received --> cancelled : anulowanie
+in_preparation --> cancelled : anulowanie
+ready_for_pickup --> cancelled : nieodebrane / anulowane
+
+completed --> [*]
+cancelled --> [*]
+@enduml
